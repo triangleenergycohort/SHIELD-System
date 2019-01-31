@@ -13,6 +13,9 @@ props.setProperty('mail.smtp.starttls.enable','true');
 % A simple script highlighting how you can connect to Outlook and
 % import emails, including their subjects, bodies & attachements
 
+txt = sprintf('Checking credentials...')
+while (1)
+
 %% Connecting to Outlook
 
 outlook = actxserver('Outlook.Application');
@@ -27,9 +30,27 @@ firstemail=INBOX.Items.Item(count); %imports the most recent email
 subject = firstemail.get('Subject');
 body = firstemail.get('Body');
 
-if subject == "testing funcion"
-    sendmail('tec.remote01@gmail.com','Test mail with attachment','C:\Users\cluck\Downloads');
+C = strsplit(body,'\n');
+%customer_pin = strsplit(mat2str(C(1,2)),':')
+
+
+
+if (subject == "Pin number" && C(1,2) == "Pin:1234")
+    
+    sendmail('ebldevice2@gmail.com','Device Data','Data for Load, PV Power and Battery State of Charge.','C:\Users\cluck\Documents\MATLAB\EBL\testdata.xlsx');
+    delete(firstemail);
+    txt2 = sprintf('Credentials found, email sent')
+    mdl = 'ECE552ProjectSim_Updated_v2';
+    sim(mdl)
+    % delete email
+    break
 end
+
+outlook.release;
+% make sure server hang ending
+
+end
+
 
 %% Saving attachments to current directory
 %attachments = firstemail.get('Attachments');
